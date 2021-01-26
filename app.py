@@ -112,11 +112,59 @@ def tobs():
     
     return jsonify(lastyear_tobs)
 
+@app.route("/api/v1.0/<start>")
+def temp_start_date(start):
+    """ Takes Start Date and returns `TMIN`, `TAVG`, and `TMAX` 
+    for all dates greater than and equal to the start date """
 
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
 
+    temp_start_date_query = session.query(Measurement.date,\
+                                func.min(Measurement.tobs),\
+                                func.avg(Measurement.tobs),\
+                                func.max(Measurement.tobs)).\
+                        filter(Measurement.date >= start).\
+                        group_by(Measurement.date).all()
     
+    temp_start_date_lst = []
 
+    for date, TMIN, TAVG, TMAX in temp_start_date_query:
+        temp_start_date_dict = {}
+        temp_start_date_dict['date'] = date
+        temp_start_date_dict['TMIN'] = TMIN
+        temp_start_date_dict['TAVG'] = TAVG
+        temp_start_date_dict['TMAX'] = TMAX
+        temp_start_date_lst.append(temp_start_date_dict)
+    
+    return jsonify(temp_start_date_lst)
 
+@app.route("/api/v1.0/<start>/<end>")
+def temp_start_end_date(start, end):
+    """ Takes Start Date, End Date and returns `TMIN`, `TAVG`, 
+    and `TMAX` for dates between the start and end date inclusive """
+
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    temp_start_end_date_query = session.query(Measurement.date,\
+                                func.min(Measurement.tobs),\
+                                func.avg(Measurement.tobs),\
+                                func.max(Measurement.tobs)).\
+                        filter(Measurement.date >= start, Measurement.date <= end).\
+                        group_by(Measurement.date).all()
+    
+    temp_start_date_lst = []
+
+    for date, TMIN, TAVG, TMAX in temp_start_end_date_query:
+        temp_start_date_dict = {}
+        temp_start_date_dict['date'] = date
+        temp_start_date_dict['TMIN'] = TMIN
+        temp_start_date_dict['TAVG'] = TAVG
+        temp_start_date_dict['TMAX'] = TMAX
+        temp_start_date_lst.append(temp_start_date_dict)
+    
+    return jsonify(temp_start_date_lst)
 
 
 if __name__ == '__main__':
