@@ -4,7 +4,7 @@
 
 Step1 uses Python and SQLAlchemy to do basic climate analysis and data exploration of the climate database. The resukts can be viewed in the [jupyter notebook](./climate_alchemy.ipynb)
 
-There are two paerts of the analysis **Precipitation Analysis** and **Station Analysis**
+There are two parts of the analysis **Precipitation Analysis** and **Station Analysis**
 
 ## Step 2 - Climate App
 
